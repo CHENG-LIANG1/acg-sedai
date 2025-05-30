@@ -44,7 +44,7 @@ const Sider = ({}: SiderProps) => {
 
   const renderContent = useCallback(() => {
     return (
-      <div className="flex h-full select-none flex-col justify-between gap-2 px-3 pt-4">
+      <div className="flex h-full select-none flex-col justify-between gap-2 overflow-auto px-3 pt-4">
         <div className="flex flex-col gap-4">
           <SiderItem
             isSelected={!selectIdx1 || ['/', 'home'].includes(selectIdx1)}
@@ -91,7 +91,7 @@ const Sider = ({}: SiderProps) => {
     <Drawer open={siderExpand} onOpenChange={(open) => setSiderExpand(open)} render={renderContent} />
   ) : (
     <motion.div
-      className={cn('sticky top-0 w-60 flex-shrink-0 bg-background')}
+      className={cn('sticky top-0 h-screen w-40 flex-shrink-0 overflow-auto bg-background')}
       animate={siderExpand ? { x: 0 } : { x: -300, width: 0 }}
       transition={{ type: 'spring', damping: 18 }}
     >
