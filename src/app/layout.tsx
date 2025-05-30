@@ -49,7 +49,7 @@ export default async function RootLayout(props: Props) {
   const { children } = props;
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <Head>
+      <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -57,7 +57,7 @@ export default async function RootLayout(props: Props) {
         {process.env.NODE_ENV === 'production' && (
           <Script defer src="https://stats.cosine.ren/script.js" data-website-id="7ad2461d-d49f-4b11-b33f-c09747231b13" />
         )}
-      </Head>
+      </head>
       <body className={cn('vertical-scrollbar m-0 h-full overscroll-none p-0', ...fontVariants)}>
         <Providers>
           <Root>{children}</Root>
