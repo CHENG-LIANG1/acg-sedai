@@ -155,13 +155,7 @@ export function YuriSedai() {
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex-1">
-          <CardTitle className="flex items-center gap-3 text-pink-700 dark:text-pink-300">
-            <Icon icon="lucide:cherry-blossom" className="h-5 w-5 text-pink-300" />
-          </CardTitle>
-          <p className="text-xs text-pink-500 dark:text-pink-500">点击动画名称标记为已看过，数据会自动保存到本地哦～</p>
-        </div>
-
+        <p className="text-xs text-primary">点击动画名称标记为已看过，数据会自动保存到本地哦～</p>
         <div className="flex items-center gap-3">
           {/* Poster Actions */}
           <div className="flex items-center gap-2">
@@ -310,18 +304,14 @@ export function YuriSedai() {
         <div className="mt-6 border-t border-pink-200/50 pt-4 dark:border-pink-800/50">
           <p className="text-center text-sm text-gray-500 dark:text-gray-400">
             Power by{' '}
-            <a
-              href="https://x.com/_cosine_x"
-              target="_blank"
-              className="relative text-pink-500 after:absolute after:bottom-0 after:left-0 after:block after:h-px after:w-full after:origin-bottom-left after:scale-x-0 after:bg-pink-500 after:transition after:duration-300 hover:after:scale-x-100"
-            >
+            <a href="https://x.com/_cosine_x" target="_blank" className="link-underline">
               cosine
             </a>
             {' | '}
             <a
               href="https://github.com/yusixian/acg-sedai/blob/main/src/tools/yuri-sedai/data.ts"
               target="_blank"
-              className="relative text-pink-500 after:absolute after:bottom-0 after:left-0 after:block after:h-px after:w-full after:origin-bottom-left after:scale-x-0 after:bg-pink-500 after:transition after:duration-300 hover:after:scale-x-100"
+              className="link-underline"
             >
               编辑本页面
             </a>

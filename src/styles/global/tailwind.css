@@ -41,6 +41,12 @@
   }
 }
 
+@layer utilities {
+  .link-underline {
+    @apply relative text-primary after:absolute after:-bottom-0.5 after:left-0 after:block after:h-0.5 after:w-full after:origin-bottom-left after:scale-x-0 after:bg-primary after:transition after:duration-300 hover:after:scale-x-100;
+  }
+}
+
 /* utils */
 @layer components {
   .flex-center {
@@ -61,5 +67,9 @@
 
   .styled-outline {
     @apply outline-1 outline-primary hover:outline focus:outline;
+  }
+
+  .prose a {
+    @apply link-underline no-underline;
   }
 }
