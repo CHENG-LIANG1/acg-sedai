@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Icon } from '@iconify/react';
 import { cn } from '@/lib/utils';
-import { useLocalStorage } from 'react-use';
-import { STORAGE_KEY } from '@/constants/storage';
+import { Icon } from '@iconify/react';
+import { useAtom } from 'jotai';
+import { AnimatePresence, motion } from 'motion/react';
+import { useMemo, useState } from 'react';
+import { watchedAnimesAtom } from './store';
 
 interface YuriDataItem {
   name: string;
@@ -17,15 +17,10 @@ interface AnimeTableProps {
   className?: string;
 }
 
-interface GroupedAnime {
-  year: string;
-  animes: YuriDataItem[];
-}
-
 export function YearlyAnimeTable({ data, className }: AnimeTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [watchedAnimes, setWatchedAnimes] = useLocalStorage<string[]>(STORAGE_KEY.WATCHED_ANIME_LIST, []);
   const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
+  const [watchedAnimes, setWatchedAnimes] = useAtom(watchedAnimesAtom);
 
   // Group anime by year
   const groupedData = useMemo(() => {

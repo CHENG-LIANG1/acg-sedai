@@ -12,5 +12,5 @@ export const seoConfig = {
   title: 'ACG 世代',
   description: '百合版动漫成分表！',
   keywords: 'acg, sedai, 百合, 动漫, 世代, 成分表',
-  url: 'https://acg-sedai.egoist.dev/',
+  url: 'https://acg.cosine.cv',
 };

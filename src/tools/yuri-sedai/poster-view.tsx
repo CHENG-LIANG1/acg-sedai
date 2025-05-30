@@ -1,9 +1,9 @@
 'use client';
 
-import { STORAGE_KEY } from '@/constants/storage';
 import { Icon } from '@iconify/react';
 import { forwardRef, useCallback, useMemo } from 'react';
-import { useLocalStorage } from 'react-use';
+import { useAtomValue } from 'jotai';
+import { watchedAnimesAtom } from './store';
 
 interface YuriDataItem {
   name: string;
@@ -19,7 +19,7 @@ interface PosterViewProps {
 
 export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
   ({ data, className, isMobile = false, theme = 'light' }, ref) => {
-    const [watchedAnimes] = useLocalStorage<string[]>(STORAGE_KEY.WATCHED_ANIME_LIST, []);
+    const watchedAnimes = useAtomValue(watchedAnimesAtom);
 
     // Check if anime is watched
     const isWatched = useCallback(
