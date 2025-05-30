@@ -76,7 +76,7 @@ const MenuIcon = forwardRef<MenuIconHandle, MenuIconProps>(
         }
         onMouseEnter?.(e);
       },
-      [controls, currentState, onMouseEnter]
+      [controls, currentState, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -86,7 +86,7 @@ const MenuIcon = forwardRef<MenuIconHandle, MenuIconProps>(
         }
         onMouseLeave?.(e);
       },
-      [controls, currentState, onMouseLeave]
+      [controls, currentState, onMouseLeave],
     );
 
     return (
@@ -98,7 +98,7 @@ const MenuIcon = forwardRef<MenuIconHandle, MenuIconProps>(
         {...props}
       >
         <svg
-          xmlns="http://www.w3.org/2000/svg" 
+          xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -106,37 +106,13 @@ const MenuIcon = forwardRef<MenuIconHandle, MenuIconProps>(
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <motion.line
-            x1="4"
-            y1="6"
-            x2="20"
-            y2="6"
-            variants={lineVariants}
-            animate={controls}
-            custom={1}
-          />
-          <motion.line
-            x1="4"
-            y1="12"
-            x2="20"
-            y2="12"
-            variants={lineVariants}
-            animate={controls}
-            custom={2}
-          />
-          <motion.line
-            x1="4"
-            y1="18"
-            x2="20"
-            y2="18"
-            variants={lineVariants}
-            animate={controls}
-            custom={3}
-          />
+          <motion.line x1="4" y1="6" x2="20" y2="6" variants={lineVariants} animate={controls} custom={1} />
+          <motion.line x1="4" y1="12" x2="20" y2="12" variants={lineVariants} animate={controls} custom={2} />
+          <motion.line x1="4" y1="18" x2="20" y2="18" variants={lineVariants} animate={controls} custom={3} />
         </svg>
       </div>
     );
-  }
+  },
 );
 
 MenuIcon.displayName = 'MenuIcon';

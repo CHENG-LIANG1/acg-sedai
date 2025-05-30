@@ -18,7 +18,7 @@ function NavItem({ selected, icon, name, onClick, className, indicatorClass, lay
       <div
         className={cn(
           'relative flex h-full w-full cursor-pointer items-center justify-center text-base',
-          selected ? 'text-primary' : ' hover:brightness-75',
+          selected ? 'text-primary' : 'hover:brightness-75',
           className,
         )}
         onClick={onClick}

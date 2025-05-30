@@ -33,7 +33,7 @@ export default function Home() {
                   const tool = tools[toolIdx];
                   return (
                     <motion.div
-                      className="cursor-pointer select-none "
+                      className="cursor-pointer select-none"
                       whileHover={{ y: -5 }}
                       layoutId={tool.path}
                       key={tool.path}
@@ -86,7 +86,7 @@ const HomeItem = React.memo(({ tool }: { tool: Tool }) => {
 
   return (
     <motion.div
-      className="cursor-pointer select-none "
+      className="cursor-pointer select-none"
       whileHover={{ y: -5 }}
       layoutId={tool.path}
       onClick={() => router.push(tool.path)}
