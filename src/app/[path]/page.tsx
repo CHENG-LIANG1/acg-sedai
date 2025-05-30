@@ -21,6 +21,9 @@ export async function generateMetadata({ params }: { params: { path: string } })
     };
   }
 
+  // Generate OG image URL with tool path
+  const ogImageUrl = `/api/og?path=${encodeURIComponent(tool.path)}`;
+
   return {
     title: `${tool.name} - ${seoConfig.title}`,
     description: tool.description,
@@ -32,11 +35,20 @@ export async function generateMetadata({ params }: { params: { path: string } })
       locale: 'zh_CN',
       type: 'website',
       url: `${seoConfig.url}${tool.path}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${tool.name} - ${seoConfig.title}`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: `${tool.name} - ${seoConfig.title}`,
       description: tool.description,
+      images: [ogImageUrl],
     },
   };
 }

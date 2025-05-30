@@ -28,11 +28,20 @@ export const metadata = {
     locale: 'zh_CN',
     type: 'website',
     url: seoConfig.url,
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: seoConfig.title,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: seoConfig.title,
     description: seoConfig.description,
+    images: ['/api/og'],
   },
 };
 
