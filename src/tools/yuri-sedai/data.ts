@@ -356,6 +356,8 @@ const yuriTable: YuriDataItem[] = [
   { date: '2024/07/08', name: '深夜重拳' },
   { date: '2017/04/01', name: '风灵玉秀' },
   { date: '2009/07/01', name: '青之花' },
+  { date: '2017/01/12', name: '人渣的本愿' },
+  { date: '2020/10/04', name: '无能力者娜娜' },
 ];
 
 export { yuriTable, type YuriDataItem };
