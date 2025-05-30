@@ -67,7 +67,6 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
 
     const isDark = theme === 'dark';
     const containerWidth = isMobile ? 'w-[360px]' : 'w-[720px]';
-    const gridCols = isMobile ? 'grid-cols-1' : 'grid-cols-2';
     const padding = isMobile ? 'p-4' : 'p-6';
     const titleSize = isMobile ? 'text-xl' : 'text-2xl';
     const iconSize = isMobile ? 'h-6 w-6' : 'h-7 w-7';
@@ -75,26 +74,30 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
     // Theme-based styles
     const bgColor = isDark ? '#111827' : '#ffffff';
     const textColor = isDark ? '#f9fafb' : '#111827';
-    const cardBg = isDark ? '#1f2937' : '#fef7f0';
-    const cardBorder = isDark ? '#374151' : '#e5e7eb';
-    const itemBg = isDark ? 'rgba(55, 65, 81, 0.8)' : 'rgba(255, 255, 255, 0.9)';
-    const waitingBg = isDark ? 'rgba(75, 85, 99, 0.8)' : 'rgba(243, 244, 246, 0.9)';
+    const cardBg = isDark ? '#1f2937' : 'linear-gradient(135deg, rgba(252, 231, 243, 0.6) 0%, rgba(243, 232, 255, 0.6) 100%)';
+    const cardBorder = isDark ? '#374151' : '#f9a8d4';
+    const itemBg = isDark
+      ? 'rgba(55, 65, 81, 0.8)'
+      : 'linear-gradient(135deg, rgba(252, 231, 243, 0.8) 0%, rgba(243, 232, 255, 0.8) 100%)';
+    const waitingBg = isDark ? 'rgba(75, 85, 99, 0.8)' : 'rgba(251, 207, 232, 0.4)';
 
     return (
       <div
         ref={ref}
-        className={`${containerWidth} ${isDark ? 'dark bg-gray-900' : 'bg-white'} ${padding} ${className}`}
+        className={`${containerWidth} ${isDark ? 'dark bg-gray-900' : 'bg-gradient-to-br from-pink-50 via-white to-purple-50'} ${padding} ${className}`}
         style={{
           fontFamily: 'system-ui, -apple-system, sans-serif',
-          backgroundColor: bgColor,
+          backgroundColor: isDark ? bgColor : undefined,
+          backgroundImage: isDark ? undefined : 'linear-gradient(135deg, #fdf2f8 0%, #ffffff 50%, #faf5ff 100%)',
           color: textColor,
+          boxShadow: isDark ? undefined : '0 20px 25px -5px rgba(236, 72, 153, 0.1), 0 10px 10px -5px rgba(236, 72, 153, 0.04)',
         }}
       >
         {/* Header */}
         <div className={`${isMobile ? 'mb-6' : 'mb-8'} text-center`}>
           <div className="mb-3 flex items-center justify-center gap-2">
             <Icon icon="lucide:cherry-blossom" className={`${iconSize} text-pink-500`} />
-            <h1 className={`${titleSize} font-bold`} style={{ color: isDark ? '#f9fafb' : '#1f2937' }}>
+            <h1 className={`${titleSize} font-bold`} style={{ color: isDark ? '#f9fafb' : '#be185d' }}>
               Yuri 作品观看记录
             </h1>
             <Icon icon="lucide:cherry-blossom" className={`${iconSize} text-pink-500`} />
@@ -105,22 +108,22 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
             <div className="text-center">
               <div
                 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold`}
-                style={{ color: isDark ? '#f472b6' : '#dc2626' }}
+                style={{ color: isDark ? '#f472b6' : '#be185d' }}
               >
                 {watchedCount}
               </div>
-              <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#4b5563' }}>
+              <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#be185d' }}>
                 已观看
               </div>
             </div>
             <div className="text-center">
               <div
                 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold`}
-                style={{ color: isDark ? '#a78bfa' : '#9333ea' }}
+                style={{ color: isDark ? '#a78bfa' : '#7c3aed' }}
               >
                 {totalAnimes}
               </div>
-              <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#4b5563' }}>
+              <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#7c3aed' }}>
                 总计
               </div>
             </div>
@@ -131,7 +134,7 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
               >
                 {completionRate}%
               </div>
-              <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#4b5563' }}>
+              <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#059669' }}>
                 完成度
               </div>
             </div>
@@ -139,14 +142,25 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
         </div>
 
         {/* Years Grid */}
-        <div className={`grid ${gridCols} ${isMobile ? 'gap-3' : 'gap-4'}`}>
+        <div
+          className={`${isMobile ? 'gap-3' : 'gap-4'}`}
+          style={{
+            columnCount: isMobile ? 1 : 2,
+            columnGap: isMobile ? '0.75rem' : '1rem',
+            columnFill: 'balance',
+          }}
+        >
           {posterData.map((group) => (
             <div
               key={group.year}
-              className={`rounded-lg border ${isMobile ? 'p-3' : 'p-4'}`}
+              className={`rounded-lg border ${isMobile ? 'mb-3 p-3' : 'mb-4 p-4'} w-full`}
               style={{
-                backgroundColor: cardBg,
+                background: cardBg,
                 borderColor: cardBorder,
+                boxShadow: isDark
+                  ? undefined
+                  : '0 4px 6px -1px rgba(236, 72, 153, 0.1), 0 2px 4px -1px rgba(236, 72, 153, 0.06)',
+                breakInside: 'avoid',
               }}
             >
               {/* Year Header */}
@@ -162,7 +176,7 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
                     <Icon icon="lucide:crown" className="h-3.5 w-3.5 text-amber-500" />
                   )}
                 </div>
-                <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#4b5563' }}>
+                <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#be185d' }}>
                   {group.watchedCount}/{group.totalCount}
                 </div>
               </div>
@@ -173,10 +187,15 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
                   <div
                     key={`${anime.name}-${anime.date}`}
                     className="flex items-center gap-1.5 rounded-md px-2 py-1"
-                    style={{ backgroundColor: itemBg }}
+                    style={{
+                      background: itemBg,
+                      boxShadow: isDark
+                        ? undefined
+                        : '0 1px 3px 0 rgba(236, 72, 153, 0.1), 0 1px 2px 0 rgba(236, 72, 153, 0.06)',
+                    }}
                   >
                     <Icon icon="lucide:check-circle" className="h-2.5 w-2.5 flex-shrink-0 text-pink-500" />
-                    <span className="truncate text-xs" style={{ color: isDark ? '#d1d5db' : '#374151' }}>
+                    <span className="truncate text-xs" style={{ color: isDark ? '#d1d5db' : '#be185d' }}>
                       {anime.name}
                     </span>
                   </div>
@@ -186,7 +205,7 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
                 {group.watchedCount === 0 && (
                   <div className="flex items-center gap-1.5 rounded-md px-2 py-1" style={{ backgroundColor: waitingBg }}>
                     <Icon icon="lucide:clock" className="h-2.5 w-2.5 flex-shrink-0 text-gray-400" />
-                    <span className="text-xs" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+                    <span className="text-xs" style={{ color: isDark ? '#9ca3af' : '#ec4899' }}>
                       待观看 ({group.totalCount})
                     </span>
                   </div>
@@ -198,7 +217,7 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(
 
         {/* Footer */}
         <div className={`${isMobile ? 'mt-4' : 'mt-6'} text-center`}>
-          <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>
+          <div className="text-xs" style={{ color: isDark ? '#9ca3af' : '#be185d' }}>
             {new Date().toLocaleDateString('zh-CN')} • ACG Sedai
           </div>
         </div>

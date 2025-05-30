@@ -305,6 +305,29 @@ export function YuriSedai() {
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {/* Footer */}
+        <div className="mt-6 border-t border-pink-200/50 pt-4 dark:border-pink-800/50">
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            Power by{' '}
+            <a
+              href="https://x.com/_cosine_x"
+              target="_blank"
+              className="relative text-pink-500 after:absolute after:bottom-0 after:left-0 after:block after:h-px after:w-full after:origin-bottom-left after:scale-x-0 after:bg-pink-500 after:transition after:duration-300 hover:after:scale-x-100"
+            >
+              cosine
+            </a>
+            {' | '}
+            <a
+              href="https://github.com/yusixian/acg-sedai/blob/main/src/tools/yuri-sedai/data.ts"
+              target="_blank"
+              className="relative text-pink-500 after:absolute after:bottom-0 after:left-0 after:block after:h-px after:w-full after:origin-bottom-left after:scale-x-0 after:bg-pink-500 after:transition after:duration-300 hover:after:scale-x-100"
+            >
+              编辑本页面
+            </a>
+            <br />用 ❤️ 制作 · 爱来自 Claude 4 · UI 不好看别喷我x
+          </p>
+        </div>
       </ClientOnly>
     </div>
   );
