@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Icon } from '@iconify/react';
 import { cn } from '@/lib/utils';
 import { useLocalStorage } from 'react-use';
+import { STORAGE_KEY } from '@/constants/storage';
 
 interface YuriDataItem {
   name: string;
@@ -21,11 +22,9 @@ interface GroupedAnime {
   animes: YuriDataItem[];
 }
 
-const STORAGE_KEY = 'watched_anime_list';
-
 export function YearlyAnimeTable({ data, className }: AnimeTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [watchedAnimes, setWatchedAnimes] = useLocalStorage<string[]>(STORAGE_KEY, []);
+  const [watchedAnimes, setWatchedAnimes] = useLocalStorage<string[]>(STORAGE_KEY.WATCHED_ANIME_LIST, []);
   const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
 
   // Group anime by year

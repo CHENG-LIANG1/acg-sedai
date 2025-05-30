@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Icon } from '@iconify/react';
+import { STORAGE_KEY } from '@/constants/storage';
 import { cn } from '@/lib/utils';
+import { Icon } from '@iconify/react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useMemo, useState } from 'react';
 import { useLocalStorage } from 'react-use';
 
 interface YuriDataItem {
@@ -16,11 +17,9 @@ interface AnimeTableProps {
   className?: string;
 }
 
-const STORAGE_KEY = 'watched_anime_list';
-
 export function CompactYearTable({ data, className }: AnimeTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [watchedAnimes, setWatchedAnimes] = useLocalStorage<string[]>(STORAGE_KEY, []);
+  const [watchedAnimes, setWatchedAnimes] = useLocalStorage<string[]>(STORAGE_KEY.WATCHED_ANIME_LIST, []);
 
   // Group anime by year
   const groupedData = useMemo(() => {

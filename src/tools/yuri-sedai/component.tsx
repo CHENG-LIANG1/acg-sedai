@@ -1,20 +1,144 @@
 'use client';
 
-import { useState } from 'react';
-import { Card, CardTitle } from '@/components/ui/card';
-import { motion, AnimatePresence } from 'motion/react';
-import { YearlyAnimeTable } from './yearly-anime-table';
+import { ClientOnly } from '@/components/common/ClientOnly';
+import { CardTitle } from '@/components/ui/card';
+import { Icon } from '@iconify/react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useRef, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import * as htmlToImage from 'html-to-image';
+import { useTheme } from 'next-themes';
 import { CompactYearTable } from './compact-year-table';
 import { yuriTable } from './data';
-import { Icon } from '@iconify/react';
-import { ClientOnly } from '@/components/common/ClientOnly';
+import { YearlyAnimeTable } from './yearly-anime-table';
+import { PosterView } from './poster-view';
 
 export function YuriSedai() {
   const [viewMode, setViewMode] = useState<'compact' | 'expanded'>('compact');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const { theme } = useTheme();
+  const posterRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Generate poster and download
+  const handleDownloadPoster = async () => {
+    if (!posterRef.current) return;
+
+    setIsGenerating(true);
+    try {
+      const isDark = theme === 'dark';
+      const backgroundColor = isDark ? '#111827' : '#ffffff';
+
+      const dataUrl = await htmlToImage.toPng(posterRef.current, {
+        quality: 1,
+        pixelRatio: 2,
+        backgroundColor,
+        width: isMobile ? 360 : 720,
+        height: undefined,
+        style: {
+          transform: 'scale(1)',
+          transformOrigin: 'top left',
+          backgroundColor,
+        },
+        filter: (node) => {
+          // Filter out problematic elements
+          if (node.classList?.contains('no-export')) {
+            return false;
+          }
+          return true;
+        },
+        cacheBust: true,
+      });
+
+      // Create download link
+      const link = document.createElement('a');
+      const themeSuffix = isDark ? 'dark-' : '';
+      link.download = `yuri-sedai-${isMobile ? 'mobile-' : ''}${themeSuffix}poster-${new Date().toISOString().split('T')[0]}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      toast.success('海报下载成功！', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error('下载失败，请重试', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  // Generate poster and copy to clipboard
+  const handleCopyPoster = async () => {
+    if (!posterRef.current) return;
+
+    setIsGenerating(true);
+    try {
+      const isDark = theme === 'dark';
+      const backgroundColor = isDark ? '#111827' : '#ffffff';
+
+      const blob = await htmlToImage.toBlob(posterRef.current, {
+        quality: 1,
+        pixelRatio: 2,
+        backgroundColor,
+        width: isMobile ? 360 : 720,
+        height: undefined,
+        style: {
+          transform: 'scale(1)',
+          transformOrigin: 'top left',
+          backgroundColor,
+        },
+        filter: (node) => {
+          if (node.classList?.contains('no-export')) {
+            return false;
+          }
+          return true;
+        },
+        cacheBust: true,
+      });
+
+      if (blob) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': blob,
+          }),
+        ]);
+
+        toast.success('海报已复制到剪贴板！', {
+          position: 'top-right',
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      console.error('Copy error:', error);
+      toast.error('复制失败，请重试', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex-1">
           <CardTitle className="flex items-center gap-3 text-pink-700 dark:text-pink-300">
             <Icon icon="lucide:cherry-blossom" className="h-5 w-5 text-pink-300" />
@@ -22,38 +146,72 @@ export function YuriSedai() {
           <p className="text-xs text-pink-500 dark:text-pink-500">点击动画名称标记为已看过，数据会自动保存到本地哦～</p>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex items-center gap-2 rounded-full bg-pink-100/80 p-1 dark:bg-pink-900/30">
-          <button
-            onClick={() => setViewMode('compact')}
-            className={`flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition-all ${
-              viewMode === 'compact'
-                ? 'bg-pink-200 text-pink-800 shadow-sm dark:bg-pink-800 dark:text-pink-200'
-                : 'text-pink-600 hover:bg-pink-200/50 dark:text-pink-400 dark:hover:bg-pink-800/50'
-            }`}
-          >
-            <Icon icon="lucide:table" className="h-3 w-3" />
-            紧凑视图
-          </button>
-          <button
-            onClick={() => setViewMode('expanded')}
-            className={`flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition-all ${
-              viewMode === 'expanded'
-                ? 'bg-pink-200 text-pink-800 shadow-sm dark:bg-pink-800 dark:text-pink-200'
-                : 'text-pink-600 hover:bg-pink-200/50 dark:text-pink-400 dark:hover:bg-pink-800/50'
-            }`}
-          >
-            <Icon icon="lucide:layout-grid" className="h-3 w-3" />
-            展开视图
-          </button>
+        <div className="flex items-center gap-3">
+          {/* Poster Actions */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDownloadPoster}
+              disabled={isGenerating}
+              className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 px-3 py-2 text-xs font-medium text-blue-700 transition-all hover:from-blue-200 hover:to-cyan-200 hover:shadow-sm disabled:opacity-50 dark:from-blue-900/30 dark:to-cyan-900/30 dark:text-blue-300 dark:hover:from-blue-800/40 dark:hover:to-cyan-800/40"
+            >
+              <Icon
+                icon={isGenerating ? 'lucide:loader-2' : 'lucide:download'}
+                className={`h-3 w-3 ${isGenerating ? 'animate-spin' : ''}`}
+              />
+              {isMobile ? '下载' : '下载海报'}
+            </button>
+            <button
+              onClick={handleCopyPoster}
+              disabled={isGenerating}
+              className="flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-100 to-teal-100 px-3 py-2 text-xs font-medium text-emerald-700 transition-all hover:from-emerald-200 hover:to-teal-200 hover:shadow-sm disabled:opacity-50 dark:from-emerald-900/30 dark:to-teal-900/30 dark:text-emerald-300 dark:hover:from-emerald-800/40 dark:hover:to-teal-800/40"
+            >
+              <Icon
+                icon={isGenerating ? 'lucide:loader-2' : 'lucide:copy'}
+                className={`h-3 w-3 ${isGenerating ? 'animate-spin' : ''}`}
+              />
+              {isMobile ? '复制' : '复制海报'}
+            </button>
+          </div>
+
+          {/* View Toggle */}
+          <div className="flex items-center gap-2 rounded-full bg-pink-100/80 p-1 dark:bg-pink-900/30">
+            <button
+              onClick={() => setViewMode('compact')}
+              className={`flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition-all ${
+                viewMode === 'compact'
+                  ? 'bg-pink-200 text-pink-800 shadow-sm dark:bg-pink-800 dark:text-pink-200'
+                  : 'text-pink-600 hover:bg-pink-200/50 dark:text-pink-400 dark:hover:bg-pink-800/50'
+              }`}
+            >
+              <Icon icon="lucide:table" className="h-3 w-3" />
+              紧凑视图
+            </button>
+            <button
+              onClick={() => setViewMode('expanded')}
+              className={`flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition-all ${
+                viewMode === 'expanded'
+                  ? 'bg-pink-200 text-pink-800 shadow-sm dark:bg-pink-800 dark:text-pink-200'
+                  : 'text-pink-600 hover:bg-pink-200/50 dark:text-pink-400 dark:hover:bg-pink-800/50'
+              }`}
+            >
+              <Icon icon="lucide:layout-grid" className="h-3 w-3" />
+              展开视图
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Animated View Switching */}
       <ClientOnly>
+        {/* Hidden Poster View for Export - Matches current theme */}
+        <div className="fixed -left-[9999px] -top-[9999px] z-[-1]">
+          <PosterView ref={posterRef} data={yuriTable} isMobile={isMobile} theme={theme as 'light' | 'dark' | undefined} />
+        </div>
+
+        {/* Animated View Switching */}
         <div className="relative overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
+              ref={mainContentRef}
               key={viewMode}
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
