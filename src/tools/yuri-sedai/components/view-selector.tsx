@@ -45,7 +45,7 @@ export function ViewSelector({ currentView, onViewChange, className }: ViewSelec
               className={cn(
                 'relative flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200',
                 'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-                isActive ? 'text-primary-foreground' : 'text-muted-foreground hover:bg-primary/10 hover:text-primary',
+                isActive ? 'text-white' : 'text-muted-foreground hover:bg-primary/10 hover:text-primary',
               )}
             >
               {isActive && (

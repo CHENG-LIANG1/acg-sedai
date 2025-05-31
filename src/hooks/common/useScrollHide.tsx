@@ -1,33 +1,47 @@
-import { useEffect, useRef, useState } from 'react';
+import { useMotionValueEvent, useScroll } from 'motion/react';
+import { useCallback, useRef, useState } from 'react';
 
 export function useScrollHide(triggerDistance?: number) {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const [_triggerDistance, setTriggerDistance] = useState(triggerDistance ?? 0);
+  const lastUpdateTime = useRef(0);
+  const triggerRef = useRef(triggerDistance ?? 30);
 
-  useEffect(() => {
-    setTriggerDistance(triggerDistance ?? window?.innerHeight);
+  const { scrollY } = useScroll();
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > _triggerDistance) {
-        if (currentScrollY > lastScrollY.current) {
-          // 向下滚动 设置不可见
-          setIsVisible(false);
+  // Update trigger distance when prop changes
+  if (triggerDistance !== undefined && triggerDistance !== triggerRef.current) {
+    triggerRef.current = triggerDistance;
+  }
+
+  const updateVisibility = useCallback((show: boolean) => {
+    const now = Date.now();
+    if (now - lastUpdateTime.current > 50) {
+      // 50ms debounce
+      setIsVisible(show);
+      lastUpdateTime.current = now;
+    }
+  }, []);
+
+  useMotionValueEvent(scrollY, 'change', (currentScrollY) => {
+    const scrollDiff = currentScrollY - lastScrollY.current;
+    if (currentScrollY > triggerRef.current) {
+      if (Math.abs(scrollDiff) > 10) {
+        if (scrollDiff > 0) {
+          // Scrolling down - hide
+          updateVisibility(false);
         } else {
-          // 向上滚动可见
-          setIsVisible(true);
+          // Scrolling up - show
+          updateVisibility(true);
         }
       }
-      lastScrollY.current = currentScrollY;
-    };
+    } else {
+      // Always visible when above trigger distance
+      updateVisibility(true);
+    }
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [_triggerDistance, triggerDistance]);
+    lastScrollY.current = currentScrollY;
+  });
 
   return isVisible;
 }
