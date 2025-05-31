@@ -220,6 +220,11 @@ export function YuriSedai() {
             >
               编辑本页面
             </a>
+            <br />
+            Inspired by{' '}
+            <a href="https://anime-sedai.egoist.dev/" target="_blank" className="link-underline">
+              anime-sedai.egoist.dev
+            </a>
             <br />用 ❤️ 制作 · 爱来自 Claude 4 · UI 不好看别喷我x
           </p>
         </div>
