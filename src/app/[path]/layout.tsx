@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
 
 export default function ToolLayout({ children }: PropsWithChildren<{}>) {
-  return <div className="mb-6 flex flex-col px-6 pt-14 md:pt-6">{children}</div>;
+  return <div className="mb-6 flex flex-col overflow-auto px-6 pt-14 md:pt-6">{children}</div>;
 }

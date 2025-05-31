@@ -25,7 +25,7 @@ const sourceOptions = [
     value: 'full' as const,
     label: '完整列表',
     icon: 'lucide:database',
-    getDescription: (count: number) => `包含全部 ${count} 部动画`,
+    getDescription: (count: number) => `包含全部 ${count} 部动画，完整列表`,
   },
 ];
 
