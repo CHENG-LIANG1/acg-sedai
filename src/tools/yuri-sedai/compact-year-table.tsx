@@ -27,10 +27,15 @@ export function CompactYearTable({ data, className }: AnimeTableProps) {
 
     data.forEach((anime) => {
       const year = anime.date.split('/')[0];
-      if (!grouped[year]) {
-        grouped[year] = [];
+      const yearNum = parseInt(year);
+
+      // Merge 2008 and earlier years into one group
+      const groupKey = yearNum <= 2008 ? '2008年及以前' : year;
+
+      if (!grouped[groupKey]) {
+        grouped[groupKey] = [];
       }
-      grouped[year].push(anime);
+      grouped[groupKey].push(anime);
     });
 
     // Convert to array and sort by year descending
@@ -39,7 +44,12 @@ export function CompactYearTable({ data, className }: AnimeTableProps) {
         year,
         animes: animes.sort((a, b) => a.name.localeCompare(b.name)),
       }))
-      .sort((a, b) => parseInt(b.year) - parseInt(a.year));
+      .sort((a, b) => {
+        // Handle special "2008年及以前" group - place it at the end
+        if (a.year === '2008年及以前') return 1;
+        if (b.year === '2008年及以前') return -1;
+        return parseInt(b.year) - parseInt(a.year);
+      });
   }, [data]);
 
   // Filter data based on search - memoized for performance
