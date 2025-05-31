@@ -4,45 +4,30 @@ import { ClientOnly } from '@/components/common/ClientOnly';
 import * as htmlToImage from 'html-to-image';
 import { useAtom } from 'jotai';
 import { useTheme } from 'next-themes';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { CompactYearTable } from './compact-year-table';
-import { PosterActions, ResetConfirmDialog } from './components';
-import { yuriTable } from './data';
+import type { DataSourceType, ViewType } from './components';
+import { DataSourceSelector, PosterActions, ResetConfirmDialog, TraditionalTable, ViewSelector } from './components';
+import { popularAnimeSubset, yuriTable } from './data';
 import { PosterView } from './poster-view';
 import { watchedAnimesAtom } from './store';
+import { TraditionalPosterView } from './traditional-poster-view';
 
 export function YuriSedai() {
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [showResetDialog, setShowResetDialog] = useState(false);
+  const [currentView, setCurrentView] = useState<ViewType>('traditional');
+  const [currentDataSource, setCurrentDataSource] = useState<DataSourceType>('popular');
   const { theme } = useTheme();
   const posterRef = useRef<HTMLDivElement>(null);
+  const traditionalPosterRef = useRef<HTMLDivElement>(null);
 
   // Use jotai atom for watched animes state management
   const [watchedAnimes, setWatchedAnimes] = useAtom(watchedAnimesAtom);
 
-  // Detect mobile device with optimized resize handler
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-
-    // Use debounced resize handler for better performance
-    let timeoutId: NodeJS.Timeout;
-    const debouncedResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkMobile, 150);
-    };
-
-    window.addEventListener('resize', debouncedResize);
-    return () => {
-      window.removeEventListener('resize', debouncedResize);
-      clearTimeout(timeoutId);
-    };
-  }, []);
+  // Get current data based on selected source
+  const currentData = currentDataSource === 'full' ? yuriTable : popularAnimeSubset;
 
   // Memoized handlers for better performance
   const handleResetWatchedAnimes = useCallback(() => {
@@ -64,18 +49,24 @@ export function YuriSedai() {
 
   // Generate poster and download
   const handleDownloadPoster = useCallback(async () => {
-    if (!posterRef.current) return;
+    // Choose the correct poster ref based on current view
+    const targetRef = currentView === 'traditional' ? traditionalPosterRef.current : posterRef.current;
+    if (!targetRef) return;
 
     setIsGenerating(true);
     try {
       const isDark = theme === 'dark';
       const backgroundColor = isDark ? '#111827' : '#ffffff';
 
-      const dataUrl = await htmlToImage.toPng(posterRef.current, {
+      // Use different settings for traditional view
+      const isTraditionalView = currentView === 'traditional';
+      const width = isTraditionalView ? 1200 : 720;
+
+      const dataUrl = await htmlToImage.toPng(targetRef, {
         quality: 1,
         pixelRatio: 2,
         backgroundColor,
-        width: 720,
+        width,
         height: undefined,
         style: {
           transform: 'scale(1)',
@@ -95,11 +86,14 @@ export function YuriSedai() {
       // Create download link
       const link = document.createElement('a');
       const themeSuffix = isDark ? 'dark-' : '';
-      link.download = `yuri-sedai-${isMobile ? 'mobile-' : ''}${themeSuffix}poster-${new Date().toISOString().split('T')[0]}.png`;
+      const viewSuffix = currentView === 'traditional' ? 'traditional-' : '';
+      const sourceSuffix = currentDataSource === 'popular' ? 'popular-' : '';
+      link.download = `yuri-sedai-${viewSuffix}${sourceSuffix}${themeSuffix}poster-${new Date().toISOString().split('T')[0]}.png`;
       link.href = dataUrl;
       link.click();
 
-      toast.success('海报下载成功！', {
+      const successMessage = currentView === 'traditional' ? '传统表格海报下载成功！' : '海报下载成功！';
+      toast.success(successMessage, {
         position: 'top-right',
         autoClose: 3000,
       });
@@ -112,22 +106,28 @@ export function YuriSedai() {
     } finally {
       setIsGenerating(false);
     }
-  }, [theme, isMobile]);
+  }, [theme, currentView, currentDataSource]);
 
   // Generate poster and copy to clipboard
   const handleCopyPoster = useCallback(async () => {
-    if (!posterRef.current) return;
+    // Choose the correct poster ref based on current view
+    const targetRef = currentView === 'traditional' ? traditionalPosterRef.current : posterRef.current;
+    if (!targetRef) return;
 
     setIsGenerating(true);
     try {
       const isDark = theme === 'dark';
       const backgroundColor = isDark ? '#111827' : '#ffffff';
 
-      const blob = await htmlToImage.toBlob(posterRef.current, {
+      // Use different settings for traditional view
+      const isTraditionalView = currentView === 'traditional';
+      const width = isTraditionalView ? 900 : 720;
+
+      const blob = await htmlToImage.toBlob(targetRef, {
         quality: 1,
         pixelRatio: 2,
         backgroundColor,
-        width: 720,
+        width,
         height: undefined,
         style: {
           transform: 'scale(1)',
@@ -150,7 +150,8 @@ export function YuriSedai() {
           }),
         ]);
 
-        toast.success('海报已复制到剪贴板！', {
+        const successMessage = currentView === 'traditional' ? '传统表格海报已复制到剪贴板！' : '海报已复制到剪贴板！';
+        toast.success(successMessage, {
           position: 'top-right',
           autoClose: 3000,
         });
@@ -164,7 +165,7 @@ export function YuriSedai() {
     } finally {
       setIsGenerating(false);
     }
-  }, [theme]);
+  }, [theme, currentView]);
 
   return (
     <div className="flex flex-col">
@@ -173,7 +174,6 @@ export function YuriSedai() {
         <div className="flex items-center gap-3">
           <PosterActions
             isGenerating={isGenerating}
-            isMobile={isMobile}
             watchedCount={watchedAnimes?.length || 0}
             onDownload={handleDownloadPoster}
             onCopy={handleCopyPoster}
@@ -181,13 +181,30 @@ export function YuriSedai() {
           />
         </div>
       </div>
+
+      {/* View and Data Source Controls */}
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:gap-6">
+        <ViewSelector currentView={currentView} onViewChange={setCurrentView} className="flex-1" />
+        <DataSourceSelector
+          currentSource={currentDataSource}
+          onSourceChange={setCurrentDataSource}
+          fullCount={yuriTable.length}
+          popularCount={popularAnimeSubset.length}
+          className="flex-1"
+        />
+      </div>
+
       <ResetConfirmDialog isOpen={showResetDialog} onClose={handleCloseResetDialog} onConfirm={handleResetWatchedAnimes} />
       <ClientOnly>
-        {/* Hidden Poster View for Export - Matches current theme */}
+        {/* Hidden Poster Views for Export - Matches current theme */}
         <div className="fixed -left-[9999px] -top-[9999px] z-[-1]">
-          <PosterView ref={posterRef} data={yuriTable} theme={theme as 'light' | 'dark' | undefined} />
+          <PosterView ref={posterRef} data={currentData} theme={theme as 'light' | 'dark' | undefined} />
+          <TraditionalPosterView ref={traditionalPosterRef} data={currentData} theme={theme as 'light' | 'dark' | undefined} />
         </div>
-        <CompactYearTable data={yuriTable} />
+
+        {/* Dynamic Table View */}
+        {currentView === 'compact' ? <CompactYearTable data={currentData} /> : <TraditionalTable data={currentData} />}
+
         {/* Footer */}
         <div className="mt-6 border-t border-pink-200/50 pt-4 dark:border-pink-800/50">
           <p className="text-center text-sm text-gray-500 dark:text-gray-400">

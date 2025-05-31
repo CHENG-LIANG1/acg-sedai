@@ -6,3 +6,8 @@ export { YearTableRow } from './year-table-row';
 export { EmptyState } from './empty-state';
 export { FilterInfo } from './filter-info';
 export { AnimeButton } from './anime-button';
+export { ViewSelector } from './view-selector';
+export type { ViewType } from './view-selector';
+export { DataSourceSelector } from './data-source-selector';
+export type { DataSourceType } from './data-source-selector';
+export { TraditionalTable } from './traditional-table';

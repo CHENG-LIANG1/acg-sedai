@@ -5,7 +5,6 @@ import React from 'react';
 
 interface PosterActionsProps {
   isGenerating: boolean;
-  isMobile: boolean;
   watchedCount: number;
   onDownload: () => void;
   onCopy: () => void;
@@ -14,7 +13,6 @@ interface PosterActionsProps {
 
 export const PosterActions = React.memo(function PosterActions({
   isGenerating,
-  isMobile,
   watchedCount,
   onDownload,
   onCopy,
@@ -31,7 +29,7 @@ export const PosterActions = React.memo(function PosterActions({
           icon={isGenerating ? 'lucide:loader-2' : 'lucide:download'}
           className={`h-3 w-3 ${isGenerating ? 'animate-spin' : ''}`}
         />
-        {isMobile ? '下载' : '下载海报'}
+        下载海报
       </button>
 
       <button
@@ -43,7 +41,7 @@ export const PosterActions = React.memo(function PosterActions({
           icon={isGenerating ? 'lucide:loader-2' : 'lucide:copy'}
           className={`h-3 w-3 ${isGenerating ? 'animate-spin' : ''}`}
         />
-        {isMobile ? '复制' : '复制海报'}
+        复制海报
       </button>
 
       <button
@@ -53,7 +51,7 @@ export const PosterActions = React.memo(function PosterActions({
         title="重置观看记录"
       >
         <Icon icon="lucide:rotate-ccw" className="h-3 w-3" />
-        {isMobile ? '重置' : '重置记录'}
+        重置记录
       </button>
     </div>
   );

@@ -31,7 +31,10 @@ module.exports = {
         orange: {
           DEFAULT: '#FFAA2C',
         },
-        gray: {},
+        gray: {
+          750: '#374151',
+          850: '#1f2937',
+        },
         border: 'hsl(var(--border))',
         background: {
           400: 'hsl(var(--background-400))',
