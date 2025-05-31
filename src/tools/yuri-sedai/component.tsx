@@ -75,7 +75,7 @@ export function YuriSedai() {
         quality: 1,
         pixelRatio: 2,
         backgroundColor,
-        width: isMobile ? 360 : 720,
+        width: 720,
         height: undefined,
         style: {
           transform: 'scale(1)',
@@ -127,7 +127,7 @@ export function YuriSedai() {
         quality: 1,
         pixelRatio: 2,
         backgroundColor,
-        width: isMobile ? 360 : 720,
+        width: 720,
         height: undefined,
         style: {
           transform: 'scale(1)',
@@ -164,7 +164,7 @@ export function YuriSedai() {
     } finally {
       setIsGenerating(false);
     }
-  }, [theme, isMobile]);
+  }, [theme]);
 
   return (
     <div className="flex flex-col">
@@ -185,7 +185,7 @@ export function YuriSedai() {
       <ClientOnly>
         {/* Hidden Poster View for Export - Matches current theme */}
         <div className="fixed -left-[9999px] -top-[9999px] z-[-1]">
-          <PosterView ref={posterRef} data={yuriTable} isMobile={isMobile} theme={theme as 'light' | 'dark' | undefined} />
+          <PosterView ref={posterRef} data={yuriTable} theme={theme as 'light' | 'dark' | undefined} />
         </div>
         <CompactYearTable data={yuriTable} />
         {/* Footer */}

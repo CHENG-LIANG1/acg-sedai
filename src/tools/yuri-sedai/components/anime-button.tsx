@@ -25,15 +25,14 @@ export const AnimeButton = React.memo(function AnimeButton({ anime, watched, onC
           : 'border-border/80 bg-background/80 text-muted-foreground backdrop-blur-sm hover:border-primary/70 hover:bg-primary/10 hover:text-primary/70 hover:shadow-md hover:shadow-primary/10',
       )}
     >
-      <span className="relative z-10">{anime.name}</span>
-
-      {watched && (
-        <div className="absolute -right-1.5 -top-1.5 z-20">
-          <div className="rounded-full bg-primary p-0.5 shadow-lg">
-            <Icon icon="lucide:check" className="h-2.5 w-2.5 text-white" />
-          </div>
+      {anime.name}
+      <div
+        className={cn('absolute -right-1.5 -top-1.5 z-10 transition duration-300', watched ? 'scale-100' : 'rotate-90 scale-0')}
+      >
+        <div className="rounded-full bg-primary p-0.5 shadow-lg">
+          <Icon icon="lucide:check" className="h-2.5 w-2.5 text-white" />
         </div>
-      )}
+      </div>
     </button>
   );
 });

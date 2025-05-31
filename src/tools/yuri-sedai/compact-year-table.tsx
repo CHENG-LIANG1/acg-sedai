@@ -113,7 +113,7 @@ export function CompactYearTable({ data, className }: AnimeTableProps) {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-gradient-to-r from-primary/10 to-primary/15">
-                <th className="w-24 px-4 py-2.5 text-left">
+                <th className="w-28 px-4 py-2.5 text-left">
                   <div className="flex items-center gap-1.5 whitespace-nowrap font-semibold text-gray-800 dark:text-gray-100">
                     <Icon icon="lucide:calendar" className="h-3 w-3 text-primary" />
                     <span className="text-sm">年份</span>

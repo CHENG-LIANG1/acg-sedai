@@ -34,8 +34,8 @@ export const YearTableRow = React.memo(function YearTableRow({
       {/* Year Column */}
       <td className="px-4 py-3 align-top">
         <div className="sticky top-0">
-          <div className="mb-1 text-lg font-bold text-primary">{group.year}</div>
-          <div className="flex flex-col gap-1 text-xs">
+          <div className="mb-1 text-center text-lg font-bold text-primary">{group.year}</div>
+          <div className="flex flex-col items-center gap-1 text-center text-xs">
             <div className="text-gray-700 dark:text-gray-200">{group.animes.length} 部</div>
             <div className="font-medium text-primary">已看 {groupWatchedCount}</div>
             {isAllCompleted && (
@@ -85,7 +85,7 @@ export const YearTableRow = React.memo(function YearTableRow({
                   <Icon icon="lucide:crown" className="h-2.5 w-2.5 text-yellow-500" />
                 </motion.div>
                 <motion.span
-                  className="whitespace-nowrap text-xs font-bold text-yellow-700 drop-shadow-sm dark:text-yellow-400"
+                  className="w-auto whitespace-nowrap text-xs font-bold text-yellow-700 drop-shadow-sm dark:text-yellow-400"
                   animate={{
                     textShadow: [
                       '0 0 4px rgba(234, 179, 8, 0.3)',
@@ -99,7 +99,7 @@ export const YearTableRow = React.memo(function YearTableRow({
                     ease: 'easeInOut',
                   }}
                 >
-                  全部完成
+                  全部看过
                 </motion.span>
               </motion.div>
             )}
