@@ -121,7 +121,7 @@ export function YuriSedai() {
 
       // Use different settings for traditional view
       const isTraditionalView = currentView === 'traditional';
-      const width = isTraditionalView ? 900 : 720;
+      const width = isTraditionalView ? 1200 : 720;
 
       const blob = await htmlToImage.toBlob(targetRef, {
         quality: 1,

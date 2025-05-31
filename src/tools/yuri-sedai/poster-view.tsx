@@ -111,14 +111,6 @@ export const PosterView = forwardRef<HTMLDivElement, PosterViewProps>(({ data, c
     >
       {/* Header */}
       <div className="mb-8 text-center">
-        <div className="mb-3 flex items-center justify-center gap-2">
-          <Icon icon="lucide:cherry-blossom" className={`${themeStyles.iconSize} text-pink-500`} />
-          <h1 className={`${themeStyles.titleSize} font-bold`} style={{ color: themeStyles.isDark ? '#f9fafb' : '#be185d' }}>
-            Yuri 作品观看记录
-          </h1>
-          <Icon icon="lucide:cherry-blossom" className={`${themeStyles.iconSize} text-pink-500`} />
-        </div>
-
         {/* Stats */}
         <div className="flex items-center justify-center gap-6">
           <div className="text-center">

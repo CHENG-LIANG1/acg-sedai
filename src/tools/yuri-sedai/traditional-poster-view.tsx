@@ -100,14 +100,6 @@ export const TraditionalPosterView = forwardRef<HTMLDivElement, TraditionalPoste
       >
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <Icon icon="lucide:calendar" className="h-8 w-8 text-red-500" />
-            <h1 className="text-3xl font-bold" style={{ color: themeStyles.isDark ? '#f9fafb' : '#111827' }}>
-              百合动画时间表 - 观看记录
-            </h1>
-            <Icon icon="lucide:calendar" className="h-8 w-8 text-red-500" />
-          </div>
-
           {/* Stats */}
           <div className="flex items-center justify-center gap-8">
             <div className="text-center">
