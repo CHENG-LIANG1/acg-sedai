@@ -86,6 +86,7 @@ const Sider = ({}: SiderProps) => {
       </div>
     );
   }, [buttons, router, selectIdx1, setSelectIdx1]);
+
   if (!isMounted) return null;
   return isMDScreen ? (
     <Drawer open={siderExpand} onOpenChange={(open) => setSiderExpand(open)} render={renderContent} />

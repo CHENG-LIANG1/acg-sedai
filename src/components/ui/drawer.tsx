@@ -14,12 +14,13 @@ import {
 } from '@floating-ui/react';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { PropsWithChildren, cloneElement, useEffect, useState } from 'react';
+import { MenuIcon } from '../ui/icon/MenuIcon';
 
 export type Position = 'top' | 'bottom' | 'left' | 'right';
+
 type DrawerProps = {
   open?: boolean;
   title?: React.ReactNode;
-  zIndex?: 0 | 20 | 30 | 40 | 50;
   onClose?: () => void;
   onOpenChange?: (open: boolean) => void;
   onExitComplete?: () => void;
@@ -48,7 +49,6 @@ function Drawer({
   className,
   renderHeader,
   renderFooter,
-  zIndex = 20,
   scroll = true,
   position = 'left',
 }: PropsWithChildren<DrawerProps>) {
@@ -84,11 +84,11 @@ function Drawer({
       <FloatingPortal>
         <AnimatePresence onExitComplete={onExitComplete}>
           {open && (
-            <FloatingOverlay lockScroll className={'relative bg-black/30'} style={{ zIndex }}>
+            <FloatingOverlay lockScroll className={'relative z-50 h-screen bg-black/30'}>
               <FloatingFocusManager context={context}>
                 <motion.div
                   className={cn(
-                    'absolute flex min-w-[10rem] flex-col bg-background p-0 md:min-w-[5rem]',
+                    'absolute z-50 flex min-w-[10rem] flex-col bg-background p-0 md:min-w-[6rem]',
                     posClass[position || 'left'],
                     fontVariants,
                     className,
@@ -100,13 +100,42 @@ function Drawer({
                   {...getFloatingProps({ ref: setFloating })}
                 >
                   {title || renderHeader ? (
-                    <header className="px-6 pt-6">
-                      {!title && (
-                        <div className="relative h-auto px-6 text-center text-xl font-medium leading-[22px]">{title}</div>
-                      )}
-                      {renderHeader?.()}
+                    <header className="flex items-center justify-between px-4 pt-4">
+                      <div className="flex-1">
+                        {title && <div className="relative h-auto text-xl font-medium leading-[22px]">{title}</div>}
+                        {renderHeader?.()}
+                      </div>
+                      {/* Close button for mobile */}
+                      <motion.div
+                        whileTap={{ scale: 1.3 }}
+                        className="relative size-8 cursor-pointer md:block"
+                        onClick={() => onClose(false)}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 300,
+                          damping: 20,
+                        }}
+                      >
+                        <MenuIcon className="size-8" initVariant="animate" />
+                      </motion.div>
                     </header>
-                  ) : null}
+                  ) : (
+                    /* Show close button even when no title/header */
+                    <header className="flex items-center justify-end px-4 pt-4 md:block">
+                      <motion.div
+                        whileTap={{ scale: 1.3 }}
+                        className="relative size-8 cursor-pointer"
+                        onClick={() => onClose(false)}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 300,
+                          damping: 20,
+                        }}
+                      >
+                        <MenuIcon className="size-8" initVariant="animate" />
+                      </motion.div>
+                    </header>
+                  )}
                   <main
                     className={cn('h-full', {
                       'overflow-auto': scroll,

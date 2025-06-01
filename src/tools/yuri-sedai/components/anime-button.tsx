@@ -26,9 +26,7 @@ export const AnimeButton = React.memo(function AnimeButton({ anime, watched, onC
       )}
     >
       {anime.name}
-      <div
-        className={cn('absolute -right-1.5 -top-1.5 z-10 transition duration-300', watched ? 'scale-100' : 'rotate-90 scale-0')}
-      >
+      <div className={cn('absolute -right-1.5 -top-1.5 transition duration-300', watched ? 'scale-100' : 'rotate-90 scale-0')}>
         <div className="rounded-full bg-primary p-0.5 shadow-lg">
           <Icon icon="lucide:check" className="h-2.5 w-2.5 text-white" />
         </div>

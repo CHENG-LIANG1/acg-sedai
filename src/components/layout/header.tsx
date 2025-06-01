@@ -29,7 +29,7 @@ export function Header() {
   return (
     <motion.header
       className={cn(
-        'sticky inset-x-0 top-0 z-50 flex h-14 select-none items-center gap-4 border-b border-border bg-background px-4 py-1 text-black dark:text-white',
+        'sticky inset-x-0 top-0 z-30 flex h-14 select-none items-center gap-4 border-b border-border bg-background px-4 py-1 text-black dark:text-white',
       )}
       initial={{ y: -100 }}
       animate={{ y: isVisible ? 0 : -100 }}

@@ -56,8 +56,9 @@ const MenuIcon = forwardRef<MenuIconHandle, MenuIconProps>(
     });
 
     useEffect(() => {
-      // Set initial state
-      controls.set(initVariant);
+      // Update both animation controls and internal state when initVariant changes
+      setCurrentState(initVariant);
+      controls.start(initVariant);
     }, [initVariant, controls]);
 
     const handleClick = useCallback(() => {
