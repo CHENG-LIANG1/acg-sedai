@@ -97,6 +97,9 @@ export function YuriSedai() {
       });
 
       // Create download link
+      // Check if we're in a client environment
+      if (typeof document === 'undefined') return;
+
       const link = document.createElement('a');
       const themeSuffix = isDark ? 'dark-' : '';
       const viewSuffix = currentView === 'traditional' ? 'traditional-' : '';
@@ -157,17 +160,20 @@ export function YuriSedai() {
       });
 
       if (blob) {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'image/png': blob,
-          }),
-        ]);
+        // Check if we're in a client environment and clipboard API is available
+        if (typeof navigator !== 'undefined' && navigator.clipboard) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blob,
+            }),
+          ]);
 
-        const successMessage = currentView === 'traditional' ? '传统表格海报已复制到剪贴板！' : '海报已复制到剪贴板！';
-        toast.success(successMessage, {
-          position: 'top-right',
-          autoClose: 3000,
-        });
+          const successMessage = currentView === 'traditional' ? '传统表格海报已复制到剪贴板！' : '海报已复制到剪贴板！';
+          toast.success(successMessage, {
+            position: 'top-right',
+            autoClose: 3000,
+          });
+        }
       }
     } catch (error) {
       console.error('Copy error:', error);
@@ -190,7 +196,7 @@ export function YuriSedai() {
             className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-2 text-xs font-medium text-purple-700 transition-all hover:from-purple-200 hover:to-pink-200 hover:shadow-sm hover:shadow-purple-200/50 disabled:opacity-50 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-300 dark:hover:from-purple-800/40 dark:hover:to-pink-800/40"
           >
             <Icon icon={showDataEditor ? 'lucide:eye-off' : 'lucide:settings'} className="h-3 w-3" />
-            <span>{showDataEditor ? '隐藏编辑器' : '数据编辑器'}</span>
+            <span>{showDataEditor ? '隐藏编辑' : '数据编辑'}</span>
           </button>
           <PosterActions
             isGenerating={isGenerating}

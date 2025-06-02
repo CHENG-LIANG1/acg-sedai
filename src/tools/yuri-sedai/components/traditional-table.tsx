@@ -58,6 +58,9 @@ export function TraditionalTable({ className }: TraditionalTableProps) {
 
   // Update window width on resize
   useEffect(() => {
+    // Check if we're in a client environment
+    if (typeof window === 'undefined') return;
+
     const updateWindowWidth = () => {
       setWindowWidth(window.innerWidth);
     };
