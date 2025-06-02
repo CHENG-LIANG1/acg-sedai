@@ -7,16 +7,19 @@ import { useCallback, useMemo, useState } from 'react';
 import { useAtom } from 'jotai';
 import { AnimeSearchBar, AnimeStats, EmptyState, FilterInfo, YearTableRow } from './components';
 import { watchedAnimesAtom } from './store';
+import { useDataSource } from './hooks/use-data-source';
 import type { YuriDataItem } from './types';
 
 interface AnimeTableProps {
-  data: YuriDataItem[];
   className?: string;
 }
 
-export function CompactYearTable({ data, className }: AnimeTableProps) {
+export function CompactYearTable({ className }: AnimeTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [watchedAnimes, setWatchedAnimes] = useAtom(watchedAnimesAtom);
+
+  // Use the data source hook
+  const { data, isCustomData } = useDataSource();
 
   // Convert watchedAnimes to Set for faster lookup - memoized
   const watchedSet = useMemo(() => new Set(watchedAnimes || []), [watchedAnimes]);
@@ -101,6 +104,16 @@ export function CompactYearTable({ data, className }: AnimeTableProps) {
 
   return (
     <div className={cn('flex w-full flex-col gap-4', className)}>
+      {/* Data Source Indicator */}
+      {isCustomData && (
+        <div className="rounded-lg bg-green-50 p-3 dark:bg-green-900/20">
+          <div className="flex items-center gap-2">
+            <Icon icon="lucide:info" className="h-4 w-4 text-green-600 dark:text-green-400" />
+            <p className="text-sm text-green-700 dark:text-green-300">当前使用自定义数据源，共 {data.length} 部作品</p>
+          </div>
+        </div>
+      )}
+
       {/* Search Bar */}
       <AnimeSearchBar value={globalFilter} onChange={handleSearchChange} />
 

@@ -11,3 +11,4 @@ export type { ViewType } from './view-selector';
 export { DataSourceSelector } from './data-source-selector';
 export type { DataSourceType } from './data-source-selector';
 export { TraditionalTable } from './traditional-table';
+export { DataSourceEditor } from './data-source-editor';

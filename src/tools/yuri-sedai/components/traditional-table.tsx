@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 import { toast } from 'react-toastify';
 import { AnimeSearchBar, AnimeStats, EmptyState, FilterInfo } from '.';
 import { watchedAnimesAtom } from '../store';
+import { useDataSource } from '../hooks/use-data-source';
 import type { YuriDataItem } from '../types';
 
 // Memoized AnimeItem component to prevent unnecessary re-renders
@@ -42,16 +43,18 @@ const AnimeItem = memo(function AnimeItem({
 });
 
 interface TraditionalTableProps {
-  data: YuriDataItem[];
   className?: string;
 }
 
-export function TraditionalTable({ data, className }: TraditionalTableProps) {
+export function TraditionalTable({ className }: TraditionalTableProps) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [watchedAnimes, setWatchedAnimes] = useAtom(watchedAnimesAtom);
   const [windowWidth, setWindowWidth] = useState(1200);
   const [contentHeight, setContentHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Use the data source hook
+  const { data, isCustomData } = useDataSource();
 
   // Update window width on resize
   useEffect(() => {
@@ -179,6 +182,16 @@ export function TraditionalTable({ data, className }: TraditionalTableProps) {
 
   return (
     <div className={cn('flex w-full flex-col gap-4', className)}>
+      {/* Data Source Indicator */}
+      {isCustomData && (
+        <div className="rounded-lg bg-green-50 p-3 dark:bg-green-900/20">
+          <div className="flex items-center gap-2">
+            <Icon icon="lucide:info" className="h-4 w-4 text-green-600 dark:text-green-400" />
+            <p className="text-sm text-green-700 dark:text-green-300">当前使用自定义数据源，共 {data.length} 部作品</p>
+          </div>
+        </div>
+      )}
+
       {/* Search Bar */}
       <AnimeSearchBar value={globalFilter} onChange={handleSearchChange} />
 

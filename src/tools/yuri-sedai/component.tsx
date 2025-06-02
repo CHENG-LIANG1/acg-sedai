@@ -1,6 +1,7 @@
 'use client';
 
 import { ClientOnly } from '@/components/common/ClientOnly';
+import { Icon } from '@iconify/react';
 import * as htmlToImage from 'html-to-image';
 import { useAtom } from 'jotai';
 import { useTheme } from 'next-themes';
@@ -8,8 +9,16 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { CompactYearTable } from './compact-year-table';
 import type { DataSourceType, ViewType } from './components';
-import { DataSourceSelector, PosterActions, ResetConfirmDialog, TraditionalTable, ViewSelector } from './components';
+import {
+  DataSourceEditor,
+  DataSourceSelector,
+  PosterActions,
+  ResetConfirmDialog,
+  TraditionalTable,
+  ViewSelector,
+} from './components';
 import { popularAnimeSubset, yuriTable } from './data';
+import { useDataSource } from './hooks/use-data-source';
 import { PosterView } from './poster-view';
 import { watchedAnimesAtom } from './store';
 import { TraditionalPosterView } from './traditional-poster-view';
@@ -19,6 +28,7 @@ export function YuriSedai() {
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [currentView, setCurrentView] = useState<ViewType>('traditional');
   const [currentDataSource, setCurrentDataSource] = useState<DataSourceType>('popular');
+  const [showDataEditor, setShowDataEditor] = useState(false);
   const { theme } = useTheme();
   const posterRef = useRef<HTMLDivElement>(null);
   const traditionalPosterRef = useRef<HTMLDivElement>(null);
@@ -26,8 +36,11 @@ export function YuriSedai() {
   // Use jotai atom for watched animes state management
   const [watchedAnimes, setWatchedAnimes] = useAtom(watchedAnimesAtom);
 
-  // Get current data based on selected source
-  const currentData = currentDataSource === 'full' ? yuriTable : popularAnimeSubset;
+  // Use the data source hook to get current data
+  const { data, isCustomData } = useDataSource();
+
+  // Get current data based on selected source, but prioritize custom data
+  const currentData = isCustomData ? data : currentDataSource === 'full' ? yuriTable : popularAnimeSubset;
 
   // Memoized handlers for better performance
   const handleResetWatchedAnimes = useCallback(() => {
@@ -171,7 +184,14 @@ export function YuriSedai() {
     <div className="flex flex-col">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-xs text-primary">点击动画名称标记为已看过，数据会自动保存到本地哦～</p>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowDataEditor(!showDataEditor)}
+            className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-2 text-xs font-medium text-purple-700 transition-all hover:from-purple-200 hover:to-pink-200 hover:shadow-sm hover:shadow-purple-200/50 disabled:opacity-50 dark:from-purple-900/30 dark:to-pink-900/30 dark:text-purple-300 dark:hover:from-purple-800/40 dark:hover:to-pink-800/40"
+          >
+            <Icon icon={showDataEditor ? 'lucide:eye-off' : 'lucide:settings'} className="h-3 w-3" />
+            <span>{showDataEditor ? '隐藏编辑器' : '数据编辑器'}</span>
+          </button>
           <PosterActions
             isGenerating={isGenerating}
             watchedCount={watchedAnimes?.length || 0}
@@ -181,21 +201,25 @@ export function YuriSedai() {
           />
         </div>
       </div>
-
-      {/* View and Data Source Controls */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:gap-6">
-        <ViewSelector currentView={currentView} onViewChange={setCurrentView} className="flex-1" />
-        <DataSourceSelector
-          currentSource={currentDataSource}
-          onSourceChange={setCurrentDataSource}
-          fullCount={yuriTable.length}
-          popularCount={popularAnimeSubset.length}
-          className="flex-1"
-        />
-      </div>
-
-      <ResetConfirmDialog isOpen={showResetDialog} onClose={handleCloseResetDialog} onConfirm={handleResetWatchedAnimes} />
       <ClientOnly>
+        {/* Data Source Editor */}
+        {showDataEditor && (
+          <div className="mb-4">
+            <DataSourceEditor />
+          </div>
+        )}
+        {/* View and Data Source Controls */}
+        <div className="my-6 flex flex-col gap-4 sm:flex-row sm:gap-6">
+          <ViewSelector currentView={currentView} onViewChange={setCurrentView} className="flex-1" />
+          <DataSourceSelector
+            currentSource={currentDataSource}
+            onSourceChange={setCurrentDataSource}
+            fullCount={yuriTable.length}
+            popularCount={popularAnimeSubset.length}
+            className="flex-1"
+          />
+        </div>
+        <ResetConfirmDialog isOpen={showResetDialog} onClose={handleCloseResetDialog} onConfirm={handleResetWatchedAnimes} />
         {/* Hidden Poster Views for Export - Matches current theme */}
         <div className="fixed -left-[9999px] -top-[9999px] z-[-1]">
           <PosterView ref={posterRef} data={currentData} theme={theme as 'light' | 'dark' | undefined} />
@@ -203,7 +227,7 @@ export function YuriSedai() {
         </div>
 
         {/* Dynamic Table View */}
-        {currentView === 'compact' ? <CompactYearTable data={currentData} /> : <TraditionalTable data={currentData} />}
+        {currentView === 'compact' ? <CompactYearTable /> : <TraditionalTable />}
 
         {/* Footer */}
         <div className="mt-6 border-t border-pink-200/50 pt-4 dark:border-pink-800/50">
