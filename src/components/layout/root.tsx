@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import FloatGroup from '../widgets/floatGroup/FloatGroup';
 import { Header } from './header';
 import Sider from './sider';
-
+// good
 export default function Root({ children }: React.PropsWithChildren<{}>) {
   const { theme } = useTheme();
   return (
