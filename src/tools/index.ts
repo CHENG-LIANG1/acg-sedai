@@ -1,10 +1,11 @@
 import { ToolCategory } from './tools.types';
 import { tool as yuriSedai } from './yuri-sedai';
+import {tvSeries} from "@/tools/series-sedai";
 
 export const toolsByCategory: ToolCategory[] = [
   {
     name: 'Anim Sedai',
-    components: [yuriSedai],
+    components: [yuriSedai, tvSeries],
   },
 ];
 

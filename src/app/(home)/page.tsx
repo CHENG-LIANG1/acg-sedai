@@ -51,7 +51,6 @@ export default function Home() {
                             }}
                             transition={microReboundPreset}
                           >
-                            <Icon icon="octicon:star-fill-24" className="h-6 w-6" />
                           </motion.div>
                         </div>
                         <CardTitle>{tool.name}</CardTitle>
@@ -103,7 +102,6 @@ const HomeItem = React.memo(({ tool }: { tool: Tool }) => {
             whileHover={{ scale: 1.3 }}
             transition={microReboundPreset}
           >
-            <Icon icon="octicon:star-24" className="h-6 w-6" />
           </motion.div>
         </div>
         <CardTitle>{tool.name}</CardTitle>
